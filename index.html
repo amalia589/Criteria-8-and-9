@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Statistics Lab — C8 & C9</title>
+<style>
+:root{
+  --ac:#2563eb;--acl:#eff6ff;--acm:#bfdbfe;--acd:#1d4ed8;
+  --s:#fff;--s2:#f8fafc;--s3:#f1f5f9;
+  --b:#e2e8f0;--b2:#cbd5e1;
+  --t1:#0f172a;--t2:#475569;--t3:#94a3b8;
+  --gr:#16a34a;--grb:#f0fdf4;--grr:#bbf7d0;
+  --am:#d97706;--amb:#fffbeb;--amr:#fde68a;
+  --rd:#dc2626;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--s2);color:var(--t1);min-height:100vh;font-size:15px;line-height:1.5;}
+.wrap{max-width:1120px;margin:0 auto;padding:0 18px;}
+.hdr{background:var(--s);border-bottom:1px solid var(--b);padding:13px 0;}
+.hdr-in{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.hdr-title{font-size:19px;font-weight:600;}
+.hdr-sub{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:2px;}
+.bdg{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:500;}
+.bdg-b{background:var(--acl);color:var(--ac);}
+.bdg-g{background:var(--grb);color:var(--gr);}
+.tnav{display:flex;gap:3px;background:var(--s3);border-radius:12px;padding:4px;margin-bottom:20px;}
+.tbtn{flex:1;padding:9px 12px;border:none;background:transparent;border-radius:9px;font-family:inherit;font-size:13.5px;font-weight:500;color:var(--t2);cursor:pointer;transition:all .15s;}
+.tbtn.act{background:var(--s);color:var(--ac);box-shadow:0 1px 4px rgba(0,0,0,.1);}
+.tbtn:hover:not(.act){background:rgba(255,255,255,.6);}
+.tpanel{display:none;}.tpanel.act{display:block;}
+.lay8{display:grid;grid-template-columns:295px 1fr;gap:16px;align-items:start;}
+.lay9{display:grid;grid-template-columns:305px 1fr;gap:16px;align-items:start;}
+.lcol,.rcol{display:flex;flex-direction:column;gap:13px;}
+.card{background:var(--s);border:1px solid var(--b);border-radius:12px;padding:16px;}
+.csm{background:var(--s);border:1px solid var(--b);border-radius:10px;padding:11px 13px;}
+label{font-size:13px;font-weight:500;color:var(--t2);display:block;margin-bottom:4px;}
+select,input[type=number],input[type=text],textarea{width:100%;padding:7px 10px;border:1px solid var(--b2);border-radius:8px;font-family:inherit;font-size:14px;color:var(--t1);background:var(--s);outline:none;transition:border-color .15s,box-shadow .15s;}
+select:focus,input:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(37,99,235,.1);}
+input[type=range]{width:100%;accent-color:var(--ac);cursor:pointer;padding:0;}
+input[type=file]{font-size:13px;padding:6px 8px;border:1px dashed var(--b2);border-radius:8px;background:var(--s3);width:100%;cursor:pointer;color:var(--t2);}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 14px;border-radius:8px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;border:none;transition:all .15s;width:100%;}
+.bp{background:var(--ac);color:#fff;}.bp:hover{background:var(--acd);}
+.bs{background:var(--s3);color:var(--t1);border:1px solid var(--b2);}.bs:hover{background:var(--b);}
+.bg{background:var(--grb);color:var(--gr);border:1px solid var(--grr);}.bg:hover{background:#dcfce7;}
+.ba{background:var(--amb);color:var(--am);border:1px solid var(--amr);}.ba:hover{background:#fef3c7;}
+.bb{background:var(--acl);color:var(--ac);border:1px solid var(--acm);}.bb:hover{background:#dbeafe;}
+.bsm{padding:5px 9px;font-size:13px;width:auto;}
+.rgrp{display:flex;gap:5px;flex-wrap:wrap;}
+.rbtn{padding:6px 12px;border:1px solid var(--b2);border-radius:7px;font-size:13px;font-weight:500;color:var(--t2);cursor:pointer;transition:all .15s;user-select:none;}
+.rbtn.sel{background:var(--ac);color:#fff;border-color:var(--ac);}
+.rbtn:hover:not(.sel){border-color:var(--ac);color:var(--ac);}
+.pres{background:var(--acl);border:1px solid var(--acm);border-radius:10px;padding:13px 15px;margin-top:11px;}
+.pval{font-size:26px;font-weight:700;color:var(--ac);font-family:'Courier New',monospace;}
+.plbl{font-size:13px;color:var(--t2);margin-top:2px;}
+.ibox{background:var(--acl);border:1px solid var(--acm);border-radius:8px;padding:9px 12px;font-size:13px;color:#1e40af;line-height:1.5;}
+.wbox{background:var(--amb);border:1px solid var(--amr);border-radius:8px;padding:9px 12px;font-size:13px;color:#92400e;line-height:1.5;}
+.sp{margin-bottom:12px;}
+.sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;}
+.sdisp{font-size:13px;font-weight:700;color:var(--ac);font-family:'Courier New',monospace;}
+.srow{display:grid;grid-template-columns:1fr 68px;gap:7px;align-items:center;}
+.stitle{font-size:14px;font-weight:600;color:var(--t1);margin-bottom:11px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:7px;}
+.sc{background:var(--s3);border-radius:10px;padding:9px 11px;}
+.sc .sv{font-size:15px;font-weight:700;color:var(--t1);font-family:'Courier New',monospace;}
+.sc .sl{font-size:11px;color:var(--t3);margin-top:1px;}
+.pr{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:5px;align-items:end;margin-bottom:7px;}
+.chdr{padding:14px 16px 8px;display:flex;align-items:center;justify-content:space-between;}
+.csub{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);}
+.ctitle{font-size:15px;font-weight:600;color:var(--t1);margin-top:1px;}
+.ibody{background:var(--s3);border-radius:10px;padding:13px;font-size:14px;line-height:1.65;color:var(--t2);}
+.empty{text-align:center;padding:44px 20px;color:var(--t3);}
+hr{border:none;border-top:1px solid var(--b);margin:12px 0;}
+@media(max-width:780px){.lay8,.lay9{grid-template-columns:1fr;}.g2,.g3{grid-template-columns:1fr;}}
+</style>
+<!-- switchTab must be in head so onclick= attrs work before body scripts load -->
+<script>
+function switchTab(id){
+  ['c8','c9'].forEach(function(t){
+    var tp=document.getElementById('tab-'+t);
+    var tb=document.getElementById('btn-'+t);
+    if(tp) tp.classList.toggle('act',t===id);
+    if(tb) tb.classList.toggle('act',t===id);
+  });
+  if(id==='c8') setTimeout(function(){ if(typeof c8Update==='function') c8Update(); },50);
+}
+window.addEventListener('resize',function(){
+  if(document.getElementById('tab-c8') && document.getElementById('tab-c8').classList.contains('act')){
+    if(typeof c8Update==='function') c8Update();
+  }
+});
+</script>
+</head>
+<body>
+
+<header class="hdr">
+<div class="wrap hdr-in">
+  <div>
+    <div class="hdr-sub">Probability &amp; Statistics Laboratory</div>
+    <div class="hdr-title">Interactive Distributions — C8 &amp; C9</div>
+  </div>
+  <div style="display:flex;gap:7px;flex-wrap:wrap;">
+    <span class="bdg bdg-b">C8 — PDF Simulation</span>
+    <span class="bdg bdg-g">C9 — Parameter Estimation</span>
+  </div>
+</div>
+</header>
+
+<main style="padding:20px 0;">
+<div class="wrap">
+
+<div class="tnav">
+  <button class="tbtn act" id="btn-c8" onclick="switchTab('c8')">📐 Module C8: PDF Simulation</button>
+  <button class="tbtn" id="btn-c9" onclick="switchTab('c9')">📊 Module C9: Parameter Estimation &amp; Fitting</button>
+</div>
+
+<!-- ===== TAB C8 ===== -->
+<div id="tab-c8" class="tpanel act">
+<div class="lay8">
+  <div class="lcol">
+    <div class="card">
+      <div class="stitle">Distribution</div>
+      <select id="c8-dist" onchange="c8SelectDist()">
+        <option value="uniform">Uniform</option>
+        <option value="triangular">Triangular</option>
+        <option value="linear">Linear</option>
+        <option value="piecewise">Piecewise</option>
+        <option value="normal">Normal</option>
+      </select>
+    </div>
+    <div class="card">
+      <div class="stitle">Parameters</div>
+      <div id="c8-params"></div>
+      <div id="c8-ibox" class="ibox" style="display:none;margin-top:9px;"></div>
+      <div id="c8-wbox" class="wbox" style="display:none;margin-top:7px;"></div>
+    </div>
+    <div class="card">
+      <div class="stitle">Probability Calculator</div>
+      <div style="margin-bottom:11px;">
+        <label>Region type</label>
+        <div class="rgrp">
+          <span class="rbtn sel" data-pt="below" onclick="c8SetPType('below')">P(X &lt; a)</span>
+          <span class="rbtn" data-pt="above" onclick="c8SetPType('above')">P(X &gt; b)</span>
+          <span class="rbtn" data-pt="between" onclick="c8SetPType('between')">P(a &lt; X &lt; b)</span>
+        </div>
+      </div>
+      <div id="c8-pinputs"></div>
+      <div class="pres">
+        <div class="pval" id="c8-pval">—</div>
+        <div class="plbl" id="c8-plbl">Select a region type above</div>
+      </div>
+    </div>
+  </div>
+  <div class="rcol">
+    <div class="card" style="padding:0;overflow:hidden;">
+      <div class="chdr">
+        <div>
+          <div class="csub">Probability Density Function</div>
+          <div class="ctitle" id="c8-ctitle">Uniform Distribution</div>
+        </div>
+        <span class="bdg bdg-b" id="c8-cbdg">f(x) = 1/(b−a)</span>
+      </div>
+      <div style="padding:8px 12px 12px;">
+        <canvas id="c8-canvas" style="width:100%;display:block;"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== TAB C9 ===== -->
+<div id="tab-c9" class="tpanel">
+<div class="lay9">
+  <div class="lcol">
+    <div class="card">
+      <div class="stitle">Quick-Load Test Datasets</div>
+      <p style="font-size:13px;color:var(--t2);margin-bottom:11px;">Generate realistic simulated data to test the fitting tool instantly.</p>
+      <div style="display:flex;flex-direction:column;gap:7px;">
+        <button class="btn bg" onclick="c9LoadDS('uniform')">⬜ Load Uniform Dataset</button>
+        <button class="btn ba" onclick="c9LoadDS('triangular')">🔺 Load Triangular Dataset</button>
+        <button class="btn bb" onclick="c9LoadDS('normal')">🔔 Load Normal Dataset</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="stitle">Data Input</div>
+      <div style="margin-bottom:9px;">
+        <label>Upload file (.csv or .txt)</label>
+        <input type="file" id="c9-file" accept=".csv,.txt" onchange="c9LoadFile(event)"/>
+      </div>
+      <hr/>
+      <label>Or paste data (comma / newline separated)</label>
+      <textarea id="c9-data" rows="6" placeholder="12.3, 15.1, 10.8, ..." style="resize:vertical;font-family:'Courier New',monospace;font-size:13px;" oninput="c9SaveUserData()"></textarea>
+      <div id="c9-stats-box" style="display:none;margin-top:9px;">
+        <div class="sgrid" id="c9-scards"></div>
+      </div>
+      <div id="c9-saved-badge" class="ibox" style="display:none;margin-top:9px;">
+        💾 <strong>Dataset saved.</strong> Switching distributions will keep your data loaded.
+        <button class="btn bs bsm" style="margin-top:7px;width:100%;" onclick="c9ClearSaved()">✕ Clear saved dataset</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="stitle">Fitting Model</div>
+      <label>Distribution to fit</label>
+      <select id="c9-model" style="margin-bottom:11px;" onchange="c9Fit()">
+        <option value="uniform">Uniform</option>
+        <option value="triangular">Triangular</option>
+        <option value="linear">Linear</option>
+        <option value="piecewise">Piecewise Uniform (Auto-bins)</option>
+        <option value="piecewise_custom">Piecewise (Custom intervals)</option>
+        <option value="normal">Normal</option>
+      </select>
+      <button class="btn bp" onclick="c9Fit()">▶ Fit Distribution</button>
+    </div>
+  </div>
+  <div class="rcol">
+    <div class="card" id="c9-pcrd" style="display:none;">
+      <div class="stitle">Estimated Parameters</div>
+      <div id="c9-pdsp"></div>
+    </div>
+    <div class="card" id="c9-ccrd" style="display:none;padding:0;overflow:hidden;">
+      <div class="chdr">
+        <div>
+          <div class="csub">Histogram + Fitted PDF (overlaid)</div>
+          <div class="ctitle" id="c9-ctitle">Distribution Fit</div>
+        </div>
+        <span class="bdg bdg-g" id="c9-cbdg">—</span>
+      </div>
+      <div style="padding:8px 12px 12px;">
+        <canvas id="c9-canvas" style="width:100%;display:block;"></canvas>
+      </div>
+    </div>
+    <div class="card" id="c9-icrd" style="display:none;">
+      <div class="stitle">📋 Interpretation</div>
+      <div class="ibody" id="c9-itext"></div>
+    </div>
+    <div class="card" id="c9-empty">
+      <div class="empty">
+        <div style="font-size:40px;margin-bottom:9px;">📊</div>
+        <div style="font-size:15px;font-weight:500;margin-bottom:4px;color:var(--t2);">No data loaded yet</div>
+        <div style="font-size:13px;">Load a test dataset or paste your data, then click "Fit Distribution"</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+</main>
+
+<footer style="margin-top:40px;padding:20px;border-top:1px solid var(--b);text-align:center;font-size:13px;color:var(--t3);">
+  Statistics Laboratory — Modules C8 &amp; C9 &nbsp;·&nbsp;
+  <a href="https://your-username.github.io/stats-lab/" target="_blank" style="color:var(--ac);text-decoration:none;">View on GitHub Pages ↗</a>
+  &nbsp;·&nbsp;
+  <a href="https://claude.ai/share/68900691-3430-47b3-930a-fa9d55c77e72" target="_blank" style="color:var(--ac);text-decoration:none;">View conversation in Claude ↗</a>
+</footer>
+
+<script>
+// ================================================================
+// MATH UTILS
+// ================================================================
+function erf(z){
+  var t=1/(1+0.3275911*Math.abs(z));
+  var p=t*(0.254829592+t*(-0.284496736+t*(1.421413741+t*(-1.453152027+t*1.061405429))));
+  var r=1-p*Math.exp(-z*z);
+  return z<0?-r:r;
+}
+function nCDF(x,u,s){return 0.5*(1+erf((x-u)/(s*Math.SQRT2)));}
+function nPDF(x,u,s){return Math.exp(-0.5*((x-u)/s)*(x-u)/s)/(s*Math.sqrt(2*Math.PI));}
+function linspace(a,b,n){var o=[];for(var i=0;i<n;i++)o.push(a+(b-a)*i/(n-1));return o;}
+function trapz(xs,ys){var s=0;for(var i=0;i<xs.length-1;i++)s+=(xs[i+1]-xs[i])*(ys[i]+ys[i+1])/2;return s;}
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+function arrMean(a){return a.reduce(function(s,v){return s+v;},0)/a.length;}
+function arrVar(a){var m=arrMean(a);return a.reduce(function(s,v){return s+(v-m)*(v-m);},0)/(a.length-1);}
+
+// ================================================================
+// CANVAS CHART ENGINE
+// ================================================================
+var DPR=window.devicePixelRatio||1;
+
+function drawChart(cvId,cfg){
+  var cv=document.getElementById(cvId);
+  if(!cv)return;
+  var W=cv.parentElement.clientWidth||600;
+  var H=cfg.type==='hist_pdf'?390:360;
+  cv.width=Math.round(W*DPR);
+  cv.height=Math.round(H*DPR);
+  cv.style.width=W+'px';
+  cv.style.height=H+'px';
+  var ctx=cv.getContext('2d');
+  ctx.scale(DPR,DPR);
+
+  var PL=58,PR=18,PT=14,PB=48;
+  var cW=W-PL-PR, cH=H-PT-PB;
+
+  // compute ranges
+  var xMin,xMax,yMin=0,yMax;
+  var histBins=null,histBW=0,histDmin=0,histN=0,histNB=0;
+
+  if(cfg.type==='pdf'){
+    xMin=cfg.xs[0]; xMax=cfg.xs[cfg.xs.length-1];
+    yMax=0; for(var i=0;i<cfg.ys.length;i++) if(cfg.ys[i]>yMax) yMax=cfg.ys[i];
+    yMax*=1.15; if(yMax===0) yMax=1;
+  } else {
+    var hd=cfg.hist.data;
+    var dmin=hd[0],dmax=hd[0];
+    for(var i=1;i<hd.length;i++){if(hd[i]<dmin)dmin=hd[i];if(hd[i]>dmax)dmax=hd[i];}
+    var pad=(dmax-dmin)*0.08;
+    xMin=dmin-pad; xMax=dmax+pad;
+    histNB=cfg.hist.nbins||12;
+    histBW=(dmax-dmin)/histNB;
+    histDmin=dmin; histN=hd.length;
+    histBins=[];
+    for(var i=0;i<histNB;i++) histBins.push(0);
+    for(var i=0;i<hd.length;i++){
+      var bi=clamp(Math.floor((hd[i]-dmin)/histBW),0,histNB-1);
+      histBins[bi]++;
+    }
+    yMax=0;
+    for(var i=0;i<histNB;i++){var dens=histBins[i]/(histN*histBW);if(dens>yMax)yMax=dens;}
+    if(cfg.pdfYs){for(var i=0;i<cfg.pdfYs.length;i++) if(cfg.pdfYs[i]>yMax) yMax=cfg.pdfYs[i];}
+    yMax*=1.15; if(yMax===0) yMax=1;
+  }
+
+  function px(x){return PL+(x-xMin)/(xMax-xMin)*cW;}
+  function py(y){return PT+cH-(y-yMin)/(yMax-yMin)*cH;}
+
+  // background + grid
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='#f1f5f9'; ctx.lineWidth=1;
+  for(var i=0;i<=5;i++){
+    var yv=yMax*i/5;
+    ctx.beginPath(); ctx.moveTo(PL,py(yv)); ctx.lineTo(PL+cW,py(yv)); ctx.stroke();
+  }
+
+  // axes
+  ctx.strokeStyle='#cbd5e1'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(PL,PT); ctx.lineTo(PL,PT+cH); ctx.lineTo(PL+cW,PT+cH); ctx.stroke();
+
+  // tick labels
+  ctx.fillStyle='#94a3b8'; ctx.font='11px system-ui,sans-serif'; ctx.textAlign='center';
+  for(var i=0;i<=6;i++){
+    var xv=xMin+(xMax-xMin)*i/6;
+    ctx.fillText(xv.toFixed(2),px(xv),PT+cH+16);
+  }
+  ctx.textAlign='right';
+  for(var i=0;i<=5;i++){
+    var yv=yMax*i/5;
+    ctx.fillText(yv.toFixed(3),PL-5,py(yv)+4);
+  }
+
+  // axis labels
+  ctx.fillStyle='#475569'; ctx.font='12px system-ui,sans-serif'; ctx.textAlign='center';
+  ctx.fillText(cfg.xlabel||'x',PL+cW/2,H-4);
+  ctx.save(); ctx.translate(13,PT+cH/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText(cfg.ylabel||'f(x)',0,0); ctx.restore();
+
+  if(cfg.type==='pdf'){
+    var xs=cfg.xs, ys=cfg.ys;
+
+    // shade region
+    if(cfg.shade && cfg.shade.lo<cfg.shade.hi){
+      var slo=Math.max(cfg.shade.lo,xMin), shi=Math.min(cfg.shade.hi,xMax);
+      ctx.beginPath();
+      var started=false;
+      for(var i=0;i<xs.length;i++){
+        if(xs[i]>=slo&&xs[i]<=shi){
+          if(!started){ctx.moveTo(px(xs[i]),py(0));started=true;}
+          ctx.lineTo(px(xs[i]),py(ys[i]));
+        }
+      }
+      if(started){
+        for(var i=xs.length-1;i>=0;i--){if(xs[i]>=slo&&xs[i]<=shi){ctx.lineTo(px(xs[i]),py(0));break;}}
+        ctx.closePath(); ctx.fillStyle='rgba(37,99,235,0.22)'; ctx.fill();
+      }
+      // boundary dashes
+      ctx.setLineDash([5,4]); ctx.strokeStyle='#2563eb'; ctx.lineWidth=1.5;
+      if(slo>xMin){
+        var idx=Math.round((slo-xs[0])/(xs[xs.length-1]-xs[0])*(xs.length-1));
+        idx=clamp(idx,0,ys.length-1);
+        ctx.beginPath(); ctx.moveTo(px(slo),py(0)); ctx.lineTo(px(slo),py(ys[idx])); ctx.stroke();
+      }
+      if(shi<xMax){
+        var idx=Math.round((shi-xs[0])/(xs[xs.length-1]-xs[0])*(xs.length-1));
+        idx=clamp(idx,0,ys.length-1);
+        ctx.beginPath(); ctx.moveTo(px(shi),py(0)); ctx.lineTo(px(shi),py(ys[idx])); ctx.stroke();
+      }
+      ctx.setLineDash([]);
+    }
+
+    // PDF line
+    ctx.beginPath(); ctx.strokeStyle='#2563eb'; ctx.lineWidth=2.5;
+    ctx.moveTo(px(xs[0]),py(ys[0]));
+    for(var i=1;i<xs.length;i++) ctx.lineTo(px(xs[i]),py(ys[i]));
+    ctx.stroke();
+
+    // legend
+    ctx.fillStyle='rgba(255,255,255,0.93)'; ctx.strokeStyle='#e2e8f0'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.rect(PL+6,PT+6,82,24); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle='#2563eb'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(PL+12,PT+18); ctx.lineTo(PL+26,PT+18); ctx.stroke();
+    ctx.fillStyle='#475569'; ctx.font='12px system-ui,sans-serif'; ctx.textAlign='left';
+    ctx.fillText('f(x) PDF',PL+30,PT+22);
+
+  } else {
+    // histogram bars
+    for(var i=0;i<histNB;i++){
+      var dens=histBins[i]/(histN*histBW);
+      var x0=px(histDmin+i*histBW);
+      var x1=px(histDmin+(i+1)*histBW);
+      var bw=Math.max(1,x1-x0-1);
+      ctx.fillStyle='rgba(37,99,235,0.22)';
+      ctx.fillRect(x0,py(dens),bw,py(0)-py(dens));
+      ctx.strokeStyle='rgba(37,99,235,0.6)'; ctx.lineWidth=1;
+      ctx.strokeRect(x0,py(dens),bw,py(0)-py(dens));
+    }
+
+    // PDF overlay
+    if(cfg.pdfXs&&cfg.pdfYs&&cfg.pdfXs.length>0){
+      ctx.beginPath(); ctx.strokeStyle='#dc2626'; ctx.lineWidth=2.5;
+      var started2=false;
+      for(var i=0;i<cfg.pdfXs.length;i++){
+        var x=cfg.pdfXs[i],y=cfg.pdfYs[i];
+        if(x<xMin||x>xMax){started2=false;continue;}
+        if(!started2){ctx.moveTo(px(x),py(y));started2=true;}
+        else ctx.lineTo(px(x),py(y));
+      }
+      ctx.stroke();
+    }
+
+    // legend
+    var lx=PL+cW-118, ly=PT+6;
+    ctx.fillStyle='rgba(255,255,255,0.95)'; ctx.strokeStyle='#e2e8f0'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.rect(lx,ly,112,46); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='rgba(37,99,235,0.3)';
+    ctx.fillRect(lx+6,ly+10,14,10);
+    ctx.strokeStyle='rgba(37,99,235,0.7)'; ctx.lineWidth=1;
+    ctx.strokeRect(lx+6,ly+10,14,10);
+    ctx.fillStyle='#475569'; ctx.font='12px system-ui,sans-serif'; ctx.textAlign='left';
+    ctx.fillText('Data',lx+24,ly+19);
+    ctx.strokeStyle='#dc2626'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(lx+6,ly+33); ctx.lineTo(lx+20,ly+33); ctx.stroke();
+    ctx.fillStyle='#475569'; ctx.fillText('Fitted PDF',lx+24,ly+37);
+  }
+
+  // chart border
+  ctx.strokeStyle='#e2e8f0'; ctx.lineWidth=1;
+  ctx.strokeRect(PL,PT,cW,cH);
+}
+
+// ================================================================
+// MODULE C8
+// ================================================================
+var c8State={dist:'uniform',ptype:'below',params:{a:2,b:8}};
+
+function mkSl(label,min,max,val,step,id){
+  var d=parseFloat(val).toFixed(step<1?2:0);
+  return '<div class="sp">'+
+    '<div class="sh"><label style="margin:0;">'+label+'</label>'+
+    '<span class="sdisp" id="sd-'+id+'">'+d+'</span></div>'+
+    '<div class="srow">'+
+    '<input type="range" id="sr-'+id+'" min="'+min+'" max="'+max+'" step="'+step+'" value="'+val+'" oninput="slUpd(\''+id+'\',this.value)"/>'+
+    '<input type="number" id="sn-'+id+'" min="'+min+'" max="'+max+'" step="'+step+'" value="'+val+'" oninput="slUpd(\''+id+'\',this.value)"/>'+
+    '</div></div>';
+}
+function slUpd(id,v){
+  var sr=document.getElementById('sr-'+id);
+  var sn=document.getElementById('sn-'+id);
+  var sd=document.getElementById('sd-'+id);
+  if(sr) sr.value=v;
+  if(sn) sn.value=v;
+  if(sd) sd.textContent=parseFloat(v).toFixed(2).replace(/\.?0+$/,'');
+  c8Update();
+}
+function gv(id){
+  var el=document.getElementById('sn-'+id);
+  return el ? parseFloat(el.value) : NaN;
+}
+
+function c8SelectDist(){
+  var dist=document.getElementById('c8-dist').value;
+  c8State.dist=dist;
+  var pd=document.getElementById('c8-params');
+  var ib=document.getElementById('c8-ibox');
+  var wb=document.getElementById('c8-wbox');
+  ib.style.display='none'; wb.style.display='none';
+
+  var titles={uniform:'Uniform Distribution',triangular:'Triangular Distribution',linear:'Linear Distribution',piecewise:'Piecewise Distribution',normal:'Normal Distribution'};
+  var badges={uniform:'f(x) = 1/(b−a)',triangular:'Triangular PDF',linear:'Linear PDF (normalized)',piecewise:'Piecewise PDF',normal:'Gaussian Curve'};
+  document.getElementById('c8-ctitle').textContent=titles[dist];
+  document.getElementById('c8-cbdg').textContent=badges[dist];
+
+  if(dist==='uniform'){
+    c8State.params={a:2,b:8};
+    pd.innerHTML=mkSl('Lower endpoint (a)',-10,20,2,0.5,'ua')+mkSl('Upper endpoint (b)',-10,20,8,0.5,'ub');
+  }
+  else if(dist==='triangular'){
+    c8State.params={a:2,b:10,c:6};
+    pd.innerHTML=mkSl('Lower endpoint (a)',0,15,2,0.5,'ta')+mkSl('Upper endpoint (b)',2,20,10,0.5,'tb')+mkSl('Mode (c)',0,15,6,0.5,'tc');
+    ib.textContent='Constraint: requires a \u2264 c \u2264 b. Chart updates only when satisfied.';
+    ib.style.display='block';
+  }
+  else if(dist==='linear'){
+    c8State.params={a:0,b:10,inc:true};
+    pd.innerHTML=mkSl('Left endpoint (a)',-10,15,0,1,'la')+mkSl('Right endpoint (b)',1,20,10,1,'lb')+
+      '<div><label>Direction</label><div class="rgrp">'+
+      '<span class="rbtn sel" id="c8-linc" onclick="c8LinDir(true)">Increasing \u2197</span>'+
+      '<span class="rbtn" id="c8-ldec" onclick="c8LinDir(false)">Decreasing \u2198</span>'+
+      '</div></div>';
+    ib.textContent='Auto-normalized so total area = 1. Formula: f(x) = 2(x\u2212a)/(b\u2212a)\u00b2 or 2(b\u2212x)/(b\u2212a)\u00b2.';
+    ib.style.display='block';
+  }
+  else if(dist==='piecewise'){
+    c8State.params={pieces:[{a:0,b:3,k:1},{a:3,b:7,k:2},{a:7,b:10,k:0.5}]};
+    pd.innerHTML='<p style="font-size:13px;color:var(--t2);margin-bottom:9px;">Heights are auto-scaled so total area = 1.</p>'+
+      '<div id="c8-pwdiv"></div>'+
+      '<button class="btn bs bsm" style="margin-top:7px;" onclick="c8AddPiece()">+ Add interval</button>';
+    ib.textContent='Each piece has a constant height. Heights are rescaled to integrate to 1.';
+    ib.style.display='block';
+    c8RenderPieces();
+  }
+  else if(dist==='normal'){
+    c8State.params={mu:5,sigma:1.5};
+    pd.innerHTML=mkSl('Mean (\u03bc)',-10,20,5,0.5,'nmu')+mkSl('Std deviation (\u03c3)',0.1,8,1.5,0.1,'nsg');
+  }
+
+  c8SetPType(c8State.ptype);
+  c8Update();
+}
+
+function c8LinDir(inc){
+  c8State.params.inc=inc;
+  var ei=document.getElementById('c8-linc'), ed=document.getElementById('c8-ldec');
+  if(ei) ei.classList.toggle('sel',inc);
+  if(ed) ed.classList.toggle('sel',!inc);
+  c8Update();
+}
+function c8AddPiece(){
+  var last=c8State.params.pieces[c8State.params.pieces.length-1];
+  c8State.params.pieces.push({a:last.b,b:last.b+2,k:1});
+  c8RenderPieces(); c8Update();
+}
+function c8DelPiece(i){
+  if(c8State.params.pieces.length<=1) return;
+  c8State.params.pieces.splice(i,1); c8RenderPieces(); c8Update();
+}
+function c8PcVal(i,k,v){
+  c8State.params.pieces[i][k]=parseFloat(v)||0; c8Update();
+}
+function c8RenderPieces(){
+  var div=document.getElementById('c8-pwdiv');
+  if(!div) return;
+  div.innerHTML=c8State.params.pieces.map(function(p,i){
+    return '<div class="pr">'+
+      '<div><label>From</label><input type="number" step="0.5" value="'+p.a+'" oninput="c8PcVal('+i+',\'a\',this.value)" style="padding:6px 8px;font-size:13px;"/></div>'+
+      '<div><label>To</label><input type="number" step="0.5" value="'+p.b+'" oninput="c8PcVal('+i+',\'b\',this.value)" style="padding:6px 8px;font-size:13px;"/></div>'+
+      '<div><label>Height</label><input type="number" step="0.1" min="0" value="'+p.k+'" oninput="c8PcVal('+i+',\'k\',this.value)" style="padding:6px 8px;font-size:13px;"/></div>'+
+      '<div style="padding-top:17px;"><button class="btn bs bsm" onclick="c8DelPiece('+i+')">&#x2715;</button></div>'+
+      '</div>';
+  }).join('');
+}
+
+function c8SetPType(pt){
+  c8State.ptype=pt;
+  document.querySelectorAll('[data-pt]').forEach(function(el){
+    el.classList.toggle('sel',el.dataset.pt===pt);
+  });
+  var rng=c8Range(), lo=rng[0], hi=rng[1], sp=hi-lo;
+  var div=document.getElementById('c8-pinputs');
+  if(pt==='below')
+    div.innerHTML=mkSl('Upper bound (a)',lo.toFixed(2),hi.toFixed(2),(lo+sp*0.4).toFixed(2),(sp/200).toFixed(4),'pb1');
+  else if(pt==='above')
+    div.innerHTML=mkSl('Lower bound (b)',lo.toFixed(2),hi.toFixed(2),(lo+sp*0.6).toFixed(2),(sp/200).toFixed(4),'pb2');
+  else
+    div.innerHTML=mkSl('Lower bound (a)',lo.toFixed(2),hi.toFixed(2),(lo+sp*0.25).toFixed(2),(sp/200).toFixed(4),'pbl')+
+                  mkSl('Upper bound (b)',lo.toFixed(2),hi.toFixed(2),(lo+sp*0.75).toFixed(2),(sp/200).toFixed(4),'pbr');
+}
+
+function c8Range(){
+  var d=c8State.dist, p=c8State.params;
+  if(d==='normal'){ var mu=p.mu||0,sg=p.sigma||1; return[mu-4.5*sg,mu+4.5*sg]; }
+  if(d==='piecewise'){
+    var pcs=p.pieces||[];
+    var lo=pcs[0].a, hi=pcs[0].b;
+    for(var i=1;i<pcs.length;i++){ if(pcs[i].a<lo)lo=pcs[i].a; if(pcs[i].b>hi)hi=pcs[i].b; }
+    return[lo,hi];
+  }
+  return[p.a||0, p.b||10];
+}
+
+function c8SyncState(){
+  var d=c8State.dist;
+  var wb=document.getElementById('c8-wbox');
+  if(d==='uniform'){
+    var ua=gv('ua'), ub=gv('ub');
+    if(!isFinite(ua)||!isFinite(ub)||ub<=ua) return false;
+    c8State.params={a:ua,b:ub};
+  }
+  else if(d==='triangular'){
+    var ta=gv('ta'), tb=gv('tb'), tc=gv('tc');
+    if(!isFinite(ta)||!isFinite(tb)||!isFinite(tc)) return false;
+    if(ta<=tc && tc<=tb){
+      if(wb) wb.style.display='none';
+      c8State.params={a:ta,b:tb,c:tc};
+    } else {
+      if(wb){ wb.textContent='\u26a0 Requires a \u2264 c \u2264 b. Got a='+ta.toFixed(2)+', c='+tc.toFixed(2)+', b='+tb.toFixed(2)+'.'; wb.style.display='block'; }
+      return false;
+    }
+  }
+  else if(d==='linear'){
+    var la=gv('la'), lb=gv('lb');
+    if(!isFinite(la)||!isFinite(lb)||lb<=la) return false;
+    c8State.params.a=la; c8State.params.b=lb;
+  }
+  else if(d==='normal'){
+    var nmu=gv('nmu'), nsg=gv('nsg');
+    if(!isFinite(nmu)||!isFinite(nsg)||nsg<=0) return false;
+    c8State.params={mu:nmu,sigma:nsg};
+  }
+  return true;
+}
+
+function c8PDF(xs){
+  var d=c8State.dist, p=c8State.params, ys=[];
+  if(d==='uniform'){
+    var inv=(p.b>p.a)?1/(p.b-p.a):0;
+    for(var i=0;i<xs.length;i++) ys.push((xs[i]>=p.a&&xs[i]<=p.b)?inv:0);
+  }
+  else if(d==='triangular'){
+    var ta=p.a, tb=p.b, tc=p.c;
+    for(var i=0;i<xs.length;i++){
+      var x=xs[i];
+      if(x<ta||x>tb){ ys.push(0); continue; }
+      if(x<=tc) ys.push(2*(x-ta)/((tb-ta)*(tc-ta+1e-15)));
+      else       ys.push(2*(tb-x)/((tb-ta)*(tb-tc+1e-15)));
+    }
+  }
+  else if(d==='linear'){
+    var la=p.a, lb=p.b, L=lb-la, inc=p.inc!==false, c1=(L>0)?2/(L*L):0;
+    for(var i=0;i<xs.length;i++){
+      var x=xs[i];
+      if(x<la||x>lb){ ys.push(0); continue; }
+      ys.push(inc ? c1*(x-la) : c1*(lb-x));
+    }
+  }
+  else if(d==='piecewise'){
+    var pcs=p.pieces||[];
+    var tot=0;
+    for(var j=0;j<pcs.length;j++) tot+=Math.max(0,pcs[j].k*(pcs[j].b-pcs[j].a));
+    var sc=(tot>0)?1/tot:1;
+    for(var i=0;i<xs.length;i++){
+      var x=xs[i], fv=0;
+      for(var j=0;j<pcs.length;j++){ if(x>=pcs[j].a&&x<=pcs[j].b){fv=pcs[j].k*sc;break;} }
+      ys.push(fv);
+    }
+  }
+  else if(d==='normal'){
+    for(var i=0;i<xs.length;i++) ys.push(nPDF(xs[i],p.mu,p.sigma));
+  }
+  return ys;
+}
+
+function c8Prob(){
+  var pt=c8State.ptype, d=c8State.dist, p=c8State.params;
+  var rng=c8Range(), lo=rng[0], hi=rng[1];
+  function intgr(a2,b2){
+    var xs2=linspace(Math.max(a2,lo),Math.min(b2,hi),800);
+    return trapz(xs2,c8PDF(xs2));
+  }
+  if(pt==='below'){
+    var bnd=gv('pb1'); if(!isFinite(bnd)) bnd=lo+(hi-lo)*0.4;
+    return{a:lo,b:bnd,prob:clamp(d==='normal'?nCDF(bnd,p.mu,p.sigma):intgr(lo,bnd),0,1),expr:'P(X < '+bnd.toFixed(3)+')'};
+  }
+  if(pt==='above'){
+    var bnd=gv('pb2'); if(!isFinite(bnd)) bnd=lo+(hi-lo)*0.6;
+    return{a:bnd,b:hi,prob:clamp(d==='normal'?1-nCDF(bnd,p.mu,p.sigma):intgr(bnd,hi),0,1),expr:'P(X > '+bnd.toFixed(3)+')'};
+  }
+  // between
+  var pbl=gv('pbl'), pbr=gv('pbr');
+  if(!isFinite(pbl)) pbl=lo+(hi-lo)*0.25;
+  if(!isFinite(pbr)) pbr=lo+(hi-lo)*0.75;
+  var a2=Math.min(pbl,pbr), b2=Math.max(pbl,pbr);
+  return{a:a2,b:b2,prob:clamp(d==='normal'?nCDF(b2,p.mu,p.sigma)-nCDF(a2,p.mu,p.sigma):intgr(a2,b2),0,1),expr:'P('+a2.toFixed(3)+' < X < '+b2.toFixed(3)+')'};
+}
+
+function c8Update(){
+  if(!c8SyncState()) return;
+  var rng=c8Range(), lo=rng[0], hi=rng[1];
+  if(lo>=hi||!isFinite(lo)||!isFinite(hi)) return;
+  var xs=linspace(lo,hi,600), ys=c8PDF(xs);
+  var pr=c8Prob();
+  drawChart('c8-canvas',{
+    type:'pdf', xs:xs, ys:ys,
+    shade:(pr&&isFinite(pr.prob))?{lo:pr.a,hi:pr.b}:null,
+    xlabel:'x', ylabel:'f(x)'
+  });
+  if(pr&&isFinite(pr.prob)){
+    document.getElementById('c8-pval').textContent=pr.prob.toFixed(4);
+    document.getElementById('c8-plbl').textContent=pr.expr;
+  }
+}
+
+// ================================================================
+// MODULE C9
+// ================================================================
+
+// ---- Global state ----
+var c9Data    = [];   // current working array
+var c9Saved   = [];   // persisted across distribution switches
+var c9PwBins  = null; // custom piecewise bins
+
+// ---- Persist & restore ----
+function c9PersistData(arr) {
+  if (!arr || arr.length < 2) return;
+  c9Saved = arr.slice();
+  c9Data  = arr.slice();
+  document.getElementById('c9-saved-badge').style.display = 'block';
+}
+
+function c9ClearSaved() {
+  c9Saved = []; c9Data = []; c9PwBins = null;
+  document.getElementById('c9-data').value = '';
+  document.getElementById('c9-stats-box').style.display = 'none';
+  document.getElementById('c9-saved-badge').style.display = 'none';
+  ['c9-pcrd','c9-ccrd','c9-icrd'].forEach(function(id){ document.getElementById(id).style.display='none'; });
+  document.getElementById('c9-empty').style.display = 'block';
+}
+
+// Called by textarea oninput
+function c9SaveUserData() {
+  var raw = document.getElementById('c9-data').value.trim();
+  var nums = raw.split(/[\s,;\n\r]+/).map(Number).filter(function(v){ return isFinite(v) && !isNaN(v); });
+  if (nums.length >= 2) {
+    c9PersistData(nums);
+    c9ShowStats();
+  }
+}
+
+// ---- Quick-load datasets ----
+function c9LoadDS(type) {
+  var data = [], N = 150;
+  if (type === 'uniform') {
+    for (var i = 0; i < N; i++) data.push(52 + Math.random() * 20);
+    document.getElementById('c9-model').value = 'uniform';
+  } else if (type === 'triangular') {
+    var ta = 58, tb = 108, tc = 78, Fc = (tc - ta) / (tb - ta);
+    for (var i = 0; i < N; i++) {
+      var u = Math.random();
+      data.push(u < Fc
+        ? ta + Math.sqrt(u * (tb - ta) * (tc - ta))
+        : tb - Math.sqrt((1 - u) * (tb - ta) * (tb - tc)));
+    }
+    document.getElementById('c9-model').value = 'triangular';
+  } else {
+    // Normal — Box-Muller
+    for (var i = 0; i < N; i += 2) {
+      var u1 = Math.random() + 1e-15, u2 = Math.random();
+      var r  = Math.sqrt(-2 * Math.log(u1));
+      data.push(79 + 5 * r * Math.cos(2 * Math.PI * u2));
+      if (data.length < N) data.push(79 + 5 * r * Math.sin(2 * Math.PI * u2));
+    }
+    data = data.slice(0, N);
+    document.getElementById('c9-model').value = 'normal';
+  }
+  c9PwBins = null;  // reset custom bins for fresh data
+  c9PersistData(data);
+  document.getElementById('c9-data').value = data.map(function(v){ return v.toFixed(4); }).join(', ');
+  c9ShowStats();
+  c9Fit();
+}
+
+// ---- File upload ----
+function c9LoadFile(e) {
+  var f = e.target.files[0]; if (!f) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    var raw = ev.target.result;
+    var nums = raw.split(/[\s,;\n\r]+/).map(Number).filter(function(v){ return isFinite(v) && !isNaN(v); });
+    if (nums.length < 2) { alert('No valid numbers found in file.'); return; }
+    c9PwBins = null;
+    c9PersistData(nums);
+    document.getElementById('c9-data').value = nums.map(function(v){ return v.toFixed(4); }).join(', ');
+    c9ShowStats();
+    c9Fit();
+  };
+  reader.readAsText(f);
+}
+
+// ---- Summary stats display ----
+function c9ShowStats() {
+  var d = c9Data; if (d.length < 2) return;
+  var n = d.length, mn = arrMean(d), sd = Math.sqrt(arrVar(d));
+  var s = d.slice().sort(function(a, b){ return a - b; });
+  var med = n % 2 === 0 ? (s[n/2-1] + s[n/2]) / 2 : s[Math.floor(n/2)];
+  document.getElementById('c9-stats-box').style.display = 'block';
+  document.getElementById('c9-scards').innerHTML = [
+    {l:'n',    v: n},
+    {l:'Min',  v: s[0].toFixed(2)},
+    {l:'Max',  v: s[n-1].toFixed(2)},
+    {l:'Mean', v: mn.toFixed(2)},
+    {l:'Median',v: med.toFixed(2)},
+    {l:'Std Dev',v: sd.toFixed(2)}
+  ].map(function(x){ return '<div class="sc"><div class="sv">'+x.v+'</div><div class="sl">'+x.l+'</div></div>'; }).join('');
+}
+
+// ================================================================
+// PIECEWISE CUSTOM HELPERS
+// ================================================================
+function c9PwEdit(i, key, val) {
+  if (!c9PwBins || !c9PwBins[i]) return;
+  c9PwBins[i][key] = parseFloat(val) || 0;
+  c9PwRedraw();
+}
+function c9PwAdd() {
+  if (!c9PwBins || !c9PwBins.length) return;
+  var last = c9PwBins[c9PwBins.length - 1];
+  var span = last.b - last.a;
+  c9PwBins.push({ a: parseFloat(last.b.toFixed(4)), b: parseFloat((last.b + span).toFixed(4)), k: last.k });
+  c9PwRenderEditor();
+  c9PwRedraw();
+}
+function c9PwDel(i) {
+  if (!c9PwBins || c9PwBins.length <= 1) return;
+  c9PwBins.splice(i, 1);
+  c9PwRenderEditor();
+  c9PwRedraw();
+}
+
+function c9PwRenderEditor() {
+  var div = document.getElementById('c9-pw-editor');
+  if (!div || !c9PwBins) return;
+  div.innerHTML = c9PwBins.map(function(bn, i) {
+    return '<div class="pr">' +
+      '<div><label>From</label><input type="number" step="0.01" value="' + bn.a + '" oninput="c9PwEdit(' + i + ',\'a\',this.value)" style="padding:6px 8px;font-size:13px;"/></div>' +
+      '<div><label>To</label><input type="number" step="0.01" value="' + bn.b + '" oninput="c9PwEdit(' + i + ',\'b\',this.value)" style="padding:6px 8px;font-size:13px;"/></div>' +
+      '<div><label>Height</label><input type="number" step="0.001" min="0" value="' + bn.k + '" oninput="c9PwEdit(' + i + ',\'k\',this.value)" style="padding:6px 8px;font-size:13px;"/></div>' +
+      '<div style="padding-top:17px;"><button class="btn bs bsm" onclick="c9PwDel(' + i + ')">&#x2715;</button></div>' +
+      '</div>';
+  }).join('');
+}
+
+function c9PwMakePDF(bins) {
+  var tot = 0;
+  for (var j = 0; j < bins.length; j++) tot += bins[j].k * Math.max(0, bins[j].b - bins[j].a);
+  var sc = tot > 0 ? 1 / tot : 1;
+  return { sc: sc, tot: tot,
+    fn: function(x) {
+      for (var j = 0; j < bins.length; j++)
+        if (x >= bins[j].a && x < bins[j].b) return bins[j].k * sc;
+      if (bins.length && x === bins[bins.length-1].b) return bins[bins.length-1].k * sc;
+      return 0;
+    }
+  };
+}
+
+function c9PwRedraw() {
+  if (!c9PwBins || !c9Data.length) return;
+  var p = c9PwMakePDF(c9PwBins);
+  var lo = c9PwBins[0].a, hi = c9PwBins[c9PwBins.length-1].b;
+  for (var j = 0; j < c9PwBins.length; j++) {
+    if (c9PwBins[j].a < lo) lo = c9PwBins[j].a;
+    if (c9PwBins[j].b > hi) hi = c9PwBins[j].b;
+  }
+  var span = hi - lo;
+  var pxs = linspace(lo - span*0.05, hi + span*0.05, 700);
+  var pys = pxs.map(p.fn);
+  var nb = Math.max(8, Math.ceil(Math.log2(c9Data.length) + 1));
+  drawChart('c9-canvas', { type:'hist_pdf', hist:{data:c9Data, nbins:nb}, pdfXs:pxs, pdfYs:pys, xlabel:'x', ylabel:'Density' });
+  var ni = document.getElementById('c9-pw-norm-info');
+  if (ni) ni.textContent = 'Raw area = ' + p.tot.toFixed(4) + ' \u2192 normalized to 1.0000';
+}
+
+// ================================================================
+// MAIN FIT FUNCTION
+// ================================================================
+function c9Fit() {
+  // Always restore saved data first — changing model never loses data
+  if (c9Saved.length >= 2) {
+    c9Data = c9Saved.slice();
+    // Also keep textarea in sync
+    var ta = document.getElementById('c9-data');
+    if (!ta.value.trim()) {
+      ta.value = c9Data.map(function(v){ return v.toFixed(4); }).join(', ');
+    }
+  } else {
+    // try to parse from textarea
+    var raw = document.getElementById('c9-data').value.trim();
+    if (!raw) {
+      document.getElementById('c9-empty').style.display = 'block';
+      ['c9-pcrd','c9-ccrd','c9-icrd'].forEach(function(id){ document.getElementById(id).style.display='none'; });
+      return;
+    }
+    var nums = raw.split(/[\s,;\n\r]+/).map(Number).filter(function(v){ return isFinite(v) && !isNaN(v); });
+    if (nums.length < 2) {
+      document.getElementById('c9-empty').style.display = 'block';
+      ['c9-pcrd','c9-ccrd','c9-icrd'].forEach(function(id){ document.getElementById(id).style.display='none'; });
+      return;
+    }
+    c9PersistData(nums);
+  }
+
+  c9ShowStats();
+  document.getElementById('c9-empty').style.display = 'none';
+
+  var d     = c9Data;
+  var n     = d.length;
+  var mn    = arrMean(d);
+  var sd    = Math.sqrt(arrVar(d));
+  var s     = d.slice().sort(function(a,b){ return a-b; });
+  var minv  = s[0], maxv = s[n-1];
+  var model = document.getElementById('c9-model').value;
+
+  var pdfFn, xlo, xhi, pdsp = '', interp = '';
+  var titles = {
+    uniform:'Uniform Fit', triangular:'Triangular Fit', linear:'Linear Fit',
+    piecewise:'Piecewise Uniform Fit', piecewise_custom:'Piecewise Custom Fit', normal:'Normal Fit'
+  };
+
+  // ---- UNIFORM ----
+  if (model === 'uniform') {
+    var ua = minv, ub = maxv;
+    pdfFn = function(x){ return (x >= ua && x <= ub) ? 1/(ub-ua) : 0; };
+    xlo = ua; xhi = ub;
+    var em  = (ua+ub)/2;
+    var ev  = (ub-ua)*(ub-ua)/12;
+    var vr  = arrVar(d)/ev;
+    var ok  = Math.abs(mn-em)/(ub-ua) < 0.12 && vr > 0.8 && vr < 1.25;
+    pdsp = '<div class="g2">' +
+      '<div class="csm"><div style="font-size:11px;color:var(--t3)">Lower (a)</div><div style="font-size:17px;font-weight:700;font-family:Courier New,monospace;margin-top:3px;">' + ua.toFixed(4) + '</div></div>' +
+      '<div class="csm"><div style="font-size:11px;color:var(--t3)">Upper (b)</div><div style="font-size:17px;font-weight:700;font-family:Courier New,monospace;margin-top:3px;">' + ub.toFixed(4) + '</div></div></div>';
+    interp = ok
+      ? 'The <strong>Uniform(' + ua.toFixed(2) + ', ' + ub.toFixed(2) + ')</strong> model appears <strong>reasonable</strong>. Sample mean (' + mn.toFixed(2) + ') \u2248 theoretical mean (' + em.toFixed(2) + '), variance ratio ' + vr.toFixed(2) + ' \u2248 1.0.'
+      : 'The Uniform fit shows <strong>discrepancies</strong>. Sample mean (' + mn.toFixed(2) + ') differs from expected (' + em.toFixed(2) + '); variance ratio is ' + vr.toFixed(2) + '. Consider Triangular or Normal.';
+  }
+
+  // ---- TRIANGULAR ----
+  else if (model === 'triangular') {
+    var ta2 = minv, tb2 = maxv, tc2 = clamp(3*mn - minv - maxv, minv, maxv);
+    pdfFn = function(x) {
+      if (x < ta2 || x > tb2) return 0;
+      if (x <= tc2) return 2*(x-ta2)/((tb2-ta2)*(tc2-ta2+1e-15));
+      return 2*(tb2-x)/((tb2-ta2)*(tb2-tc2+1e-15));
+    };
+    xlo = ta2; xhi = tb2;
+    var em2 = (ta2+tb2+tc2)/3;
+    var ok2 = Math.abs(mn-em2)/(tb2-ta2) < 0.07;
+    pdsp = '<div class="g3">' +
+      '<div class="csm"><div style="font-size:11px;color:var(--t3)">Lower (a)</div><div style="font-size:17px;font-weight:700;font-family:Courier New,monospace;margin-top:3px;">' + ta2.toFixed(4) + '</div></div>' +
+      '<div class="csm"><div style="font-size:11px;color:var(--t3)">Upper (b)</div><div style="font-size:17px;font-weight:700;font-family:Courier New,monospace;margin-top:3px;">' + tb2.toFixed(4) + '</div></div>' +
+      '<div class="csm"><div style="font-size:11px;color:var(--t3)">Mode (c)</div><div style="font-size:17px;font-weight:700;font-family:Courier New,monospace;margin-top:3px;">' + tc2.toFixed(4) + '</div></div></div>';
+    interp = ok2
+      ? 'The <strong>Triangular(' + ta2.toFixed(2) + ', ' + tb2.toFixed(2) + ', ' + tc2.toFixed(2) + ')</strong> is a <strong>good fit</strong>. Theoretical mean (' + em2.toFixed(2) + ') \u2248 sample mean (' + mn.toFixed(2) + ').'
+      : 'Triangular fit shows <strong>deviation</strong>: theoretical mean (' + em2.toFixed(2) + ') vs sample mean (' + mn.toFixed(2) + '). Mode estimated at ' + tc2.toFixed(2) + '.';
+  }
+
+  // ---- LINEAR ----
+  else if (model === 'linear') {
+    var la2 = minv, lb2 = maxv, L2 = lb2 - la2;
+    var inc = mn > (la2 + lb2) / 2;
+    pdfFn = function(x) {
+      if (x < la2 || x > lb2) return 0;
+      return inc ? 2*(x-la2)/(L2*L2) : 2*(lb2-x)/(L2*L2);
+    };
+    xlo = la2; xhi = lb2;
+    var em3  = inc ? la2 + 2*L2/3 : la2 + L2/3;
+    var dir  = inc ? 'Increasing \u2197' : 'Decreasing \u2198';
+    var ok3  = Math.abs(mn - em3) / L2 < 0.08;
+    pdsp = '<div class="g2">' +
+      '<div class="csm"><div style="font-size:11px;color:var(--t3)">Range</div><div style="font-size:16px;font-weight:700;font-family:Courier New,monospace;margin-top:3px;">[' + la2.toFixed(2) + ', ' + lb2.toFixed(2) + ']</div></div>' +
+      '<div class="csm"><div style="font-size:11px;color:var(--t3)">Direction</div><div style="font-size:15px;font-weight:700;margin-top:3px;color:var(--ac);">' + dir + '</div></div></div>';
+    interp = (ok3 ? 'The <strong>' + dir + ' linear PDF</strong> fits <strong>well</strong>. ' : '<strong>' + dir + ' linear PDF</strong> fitted. ') +
+             'Sample mean (' + mn.toFixed(2) + ') vs model expected (' + em3.toFixed(2) + '). f(x) = 2(' + (inc?'x\u2212a':'b\u2212x') + ')/(b\u2212a)\u00b2.';
+  }
+
+  // ---- PIECEWISE AUTO-BINS ----
+  else if (model === 'piecewise') {
+    var K  = 5, bwp = (maxv - minv) / K;
+    var bns = [];
+    for (var i = 0; i < K; i++) bns.push({ a: minv + i*bwp, b: minv + (i+1)*bwp, k: 0 });
+    for (var j = 0; j < d.length; j++) {
+      var bi = clamp(Math.floor((d[j] - minv) / bwp), 0, K-1);
+      bns[bi].k++;
+    }
+    for (var i = 0; i < K; i++) bns[i].k = bns[i].k / (n * bwp);
+    var tp = c9PwMakePDF(bns);
+    pdfFn = tp.fn;
+    xlo = minv; xhi = maxv;
+    pdsp = '<div class="csm" style="font-family:\'Courier New\',monospace;font-size:13px;line-height:1.9;">' +
+      bns.map(function(bn){ return '[' + bn.a.toFixed(2) + '\u2013' + bn.b.toFixed(2) + ']: ' + (bn.k * tp.sc).toFixed(4); }).join('<br>') +
+      '</div>' +
+      '<div class="ibox" style="margin-top:9px;font-size:12px;">Switch to <strong>Piecewise (Custom intervals)</strong> in the dropdown to manually edit each interval.</div>';
+    interp = '<strong>Piecewise Uniform (Auto-bins)</strong>: range [' + minv.toFixed(2) + ', ' + maxv.toFixed(2) + '] divided into ' + K + ' equal bins with empirical densities (non-parametric estimator). Normalized so total area = 1.';
+  }
+
+  // ---- PIECEWISE CUSTOM ----
+  else if (model === 'piecewise_custom') {
+    // Initialize bins from data only if not already set
+    if (!c9PwBins) {
+      var K3  = 5, bwc = (maxv - minv) / K3;
+      c9PwBins = [];
+      for (var i = 0; i < K3; i++)
+        c9PwBins.push({ a: parseFloat((minv + i*bwc).toFixed(4)), b: parseFloat((minv + (i+1)*bwc).toFixed(4)), k: 0 });
+      for (var j = 0; j < d.length; j++) {
+        var bi3 = clamp(Math.floor((d[j] - minv) / bwc), 0, K3-1);
+        c9PwBins[bi3].k++;
+      }
+      for (var i = 0; i < K3; i++)
+        c9PwBins[i].k = parseFloat((c9PwBins[i].k / (n * bwc)).toFixed(4));
+    }
+
+    var pp  = c9PwMakePDF(c9PwBins);
+    pdfFn   = pp.fn;
+    xlo     = c9PwBins[0].a;
+    xhi     = c9PwBins[c9PwBins.length - 1].b;
+
+    pdsp = '<p style="font-size:13px;color:var(--t2);margin-bottom:10px;">' +
+           'Edit endpoints and heights below. Chart updates live. Heights are auto-normalized so total area = 1.</p>' +
+           '<div id="c9-pw-editor"></div>' +
+           '<div style="display:flex;gap:7px;margin-top:9px;">' +
+           '<button class="btn bs bsm" style="flex:1;" onclick="c9PwAdd()">+ Add interval</button>' +
+           '<button class="btn ba bsm" style="flex:1;" onclick="c9PwBins=null;c9Fit();">\u21ba Reset from data</button>' +
+           '</div>' +
+           '<div class="ibox" style="margin-top:9px;font-size:12px;" id="c9-pw-norm-info">Raw area = ' + pp.tot.toFixed(4) + ' \u2192 normalized to 1.0000</div>';
+
+    interp = 'The <strong>Custom Piecewise</strong> model was initialized from the empirical density of your data on [' +
+             minv.toFixed(2) + ', ' + maxv.toFixed(2) + ']. ' +
+             'Edit any <em>From</em>, <em>To</em>, or <em>Height</em> field and the chart updates immediately. ' +
+             'Click "+ Add interval" to split the range further, or "\u21ba Reset from data" to restart from the histogram-based estimate. ' +
+             'Heights are always re-normalized so the total area under the curve equals 1.';
+  }
+
+  // ---- NORMAL ----
+  else {
+    var nmu = mn, nsg = sd;
+    pdfFn = function(x){ return nPDF(x, nmu, nsg); };
+    xlo = nmu - 4.5*nsg; xhi = nmu + 4.5*nsg;
+    var m3v = 0;
+    for (var i = 0; i < d.length; i++) m3v += (d[i]-mn)*(d[i]-mn)*(d[i]-mn);
+    m3v /= n;
+    var skew = m3v / Math.pow(sd, 3);
+    var m4v  = 0;
+    for (var i = 0; i < d.length; i++) m4v += Math.pow(d[i]-mn, 4);
+    m4v /= n;
+    var kurt = m4v / Math.pow(sd, 4) - 3;
+    var ok5  = Math.abs(skew) < 0.5 && Math.abs(kurt) < 1;
+    pdsp = '<div class="g2">' +
+      '<div class="csm"><div style="font-size:11px;color:var(--t3)">\u03bc (Mean)</div><div style="font-size:17px;font-weight:700;font-family:Courier New,monospace;margin-top:3px;">' + nmu.toFixed(4) + '</div></div>' +
+      '<div class="csm"><div style="font-size:11px;color:var(--t3)">\u03c3 (Std Dev)</div><div style="font-size:17px;font-weight:700;font-family:Courier New,monospace;margin-top:3px;">' + nsg.toFixed(4) + '</div></div></div>' +
+      '<div class="g2" style="margin-top:9px;">' +
+      '<div class="sc"><div class="sv">' + skew.toFixed(3) + '</div><div class="sl">Skewness</div></div>' +
+      '<div class="sc"><div class="sv">' + kurt.toFixed(3) + '</div><div class="sl">Excess Kurtosis</div></div></div>' +
+      '<div class="ibox" style="margin-top:9px;font-size:12px;"><strong>Excess Kurtosis</strong>: how sharp/flat the peak is vs a Normal. <strong>= 0</strong> identical to Normal &nbsp;|&nbsp; <strong>&gt; 0</strong> sharper peak, heavier tails &nbsp;|&nbsp; <strong>&lt; 0</strong> flatter peak (Uniform \u2248 \u22121.2).</div>';
+    interp = ok5
+      ? 'The <strong>Normal(\u03bc=' + nmu.toFixed(2) + ', \u03c3=' + nsg.toFixed(2) + ')</strong> model is a <strong>strong fit</strong>. Skewness (' + skew.toFixed(3) + ') \u2248 0 and excess kurtosis (' + kurt.toFixed(3) + ') \u2248 0, consistent with a Gaussian.'
+      : 'Normal fit shows <strong>potential issues</strong>. Skewness = ' + skew.toFixed(3) + ' (ideal: 0), excess kurtosis = ' + kurt.toFixed(3) + ' (ideal: 0). ' + (Math.abs(skew) > 1 ? 'Data is significantly skewed \u2014 consider Triangular.' : 'Tails may deviate from Gaussian.') + ' Parameters: \u03bc=' + nmu.toFixed(2) + ', \u03c3=' + nsg.toFixed(2) + '.';
+  }
+
+  // Reset piecewise bins when switching away
+  if (model !== 'piecewise_custom') c9PwBins = null;
+
+  // ---- Draw chart ----
+  var nb   = Math.max(8, Math.ceil(Math.log2(n) + 1));
+  var pxs  = linspace(xlo, xhi, 700);
+  var pys  = pxs.map(pdfFn);
+
+  // Show result panels
+  ['c9-pcrd','c9-ccrd','c9-icrd'].forEach(function(id){ document.getElementById(id).style.display='block'; });
+  document.getElementById('c9-pdsp').innerHTML    = pdsp;
+  document.getElementById('c9-ctitle').textContent = titles[model];
+  document.getElementById('c9-cbdg').textContent   = model.charAt(0).toUpperCase() + model.slice(1).replace('_',' ') + ' Model';
+  document.getElementById('c9-itext').innerHTML   = interp;
+
+  drawChart('c9-canvas', { type:'hist_pdf', hist:{data:d, nbins:nb}, pdfXs:pxs, pdfYs:pys, xlabel:'x', ylabel:'Density' });
+
+  // After DOM update, render piecewise editor if needed
+  if (model === 'piecewise_custom') {
+    setTimeout(function(){ c9PwRenderEditor(); }, 10);
+  }
+}
+
+// ================================================================
+// INIT
+// ================================================================
+document.addEventListener('DOMContentLoaded',function(){
+  c8SelectDist();
+});
+</script>
+</body>
+</html>
